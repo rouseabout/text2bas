@@ -66,6 +66,11 @@ static char *token[128+1] = {
 	"LEFT$","RIGHT$","MID$","'","","","","",NULL};
 #endif
 
+static void strmove(char * dst, char * src)
+{
+	memmove(dst, src, strlen(src) + 1);
+}
+
 void tokenize(int i)
 {
 	int t;
@@ -78,14 +83,14 @@ void tokenize(int i)
 		{
 			if( t > 0xFF )
 			{
-				strcpy(line.text + i + 2, line.text + i + len);
+				strmove(line.text + i + 2, line.text + i + len);
 				line.text[i+0] = 0xFF;
 				line.text[i+1] = t - 0x80;
 				line.next -= len - 2;
 			}
 			else
 			{
-				strcpy(line.text + i + 1, line.text + i + len);
+				strmove(line.text + i + 1, line.text + i + len);
 				line.text[i+0] = t;
 				line.next -= len - 1;
 			}
@@ -107,7 +112,7 @@ void squeeze_blanks(int i)
 	}
 	if( j > i+1 )
 	{
-		strcpy(line.text + i + 1, line.text + j);
+		strmove(line.text + i + 1, line.text + j);
 		line.next -= j - i - 1;
 	}
 }
